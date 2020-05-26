@@ -30,9 +30,9 @@ class PACS_Dataset():
 
   def __getitem__(self, index):
 
-    #By the index, access directly the img file
+    #By the index, access directly the img path
     image, label = self.items[index]    
-
+    image = pil_loader(image)
     # Applies preprocessing when accessing the image
     if self.transform is not None:
         image = self.transform(image)
