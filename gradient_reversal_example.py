@@ -1,6 +1,9 @@
 import torch.nn as nn
 from torch.autograd import Function
-
+try:
+    from torch.hub import load_state_dict_from_url
+except ImportError:
+    from torch.utils.model_zoo import load_url as load_state_dict_from_url
 ''' 
 Very easy template to start for developing your AlexNet with DANN 
 Has not been tested, might contain incompatibilities with most recent versions of PyTorch (you should address this)
