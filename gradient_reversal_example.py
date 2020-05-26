@@ -46,7 +46,7 @@ class RandomNetworkWithReverseGrad(nn.Module):
         self.avgpool = nn.AdaptiveAvgPool2d((6, 6))
 
         #class classifier
-        self.class_classifier = nn.Sequential(
+        self.classifier = nn.Sequential(
             nn.Dropout(),
             nn.Linear(256 * 6 * 6, 4096),
             nn.ReLU(inplace=True),
@@ -77,5 +77,16 @@ class RandomNetworkWithReverseGrad(nn.Module):
         # If we don't pass alpha, we assume we are training with supervision
         else:
             # do something else
-            class_outputs = self.class_classifier(features)
+            class_outputs = self.classifier(features)
             return class_outputs
+
+def alexNetDA(pretrained=True,  num_classes=7, **kwargs):
+    net = RandomNetworkWithReverseGrad(num_classes = 7, **kwargs)
+    if pretrained:
+        state_dict = load_state_dict_from_url(model_urls['alexnet'])
+        net.load_state_dict(state_dict, strict=False)
+        for x in [(0,1) , (2,4)]:
+            net.domain_classifier[x[0]].weight.data = net.classifier[x[1]].weight.data
+            net.domain_classifier[x[0]].bias.data = net.classifier[x[1]].bias.data
+    return net
+        
