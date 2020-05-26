@@ -7,6 +7,10 @@ Has not been tested, might contain incompatibilities with most recent versions o
 However, the logic is consistent
 '''
 
+model_urls = {
+    'alexnet': 'https://download.pytorch.org/models/alexnet-owt-4df8aa71.pth',
+}
+
 
 class ReverseLayerF(Function):
     # Forwards identity
@@ -53,14 +57,15 @@ class RandomNetworkWithReverseGrad(nn.Module):
             nn.Dropout(),
             nn.Linear(4096, 4096),
             nn.ReLU(inplace=True),
-            nn.Linear(4096, num_classes),
+            nn.Linear(4096, 1000),
         )
 
         #domain classifier
         self.domain_classifier = nn.Sequential(
-            nn.Linear(50 * 4 * 4, 100), nn.BatchNorm1d(100),
+            nn.Linear(50 * 4 * 4, 100), 
+            nn.BatchNorm1d(100),
             nn.ReLU(True),
-            nn.Linear(100, 2),
+            nn.Linear(100, 1000),
             nn.LogSoftmax(dim=1),
         )
 
@@ -85,8 +90,10 @@ def alexNetDA(pretrained=True,  num_classes=7, **kwargs):
     if pretrained:
         state_dict = load_state_dict_from_url(model_urls['alexnet'])
         net.load_state_dict(state_dict, strict=False)
-        for x in [(0,1) , (2,4)]:
+        for x in [(0,1) , (3,6)]:
             net.domain_classifier[x[0]].weight.data = net.classifier[x[1]].weight.data
             net.domain_classifier[x[0]].bias.data = net.classifier[x[1]].bias.data
-    return net
+        net.classifier[6] = nn.Linear(4096, num_classes)
+        net.domain_classifier[3] = nn.Linear(100, 2)
+            return net
         
