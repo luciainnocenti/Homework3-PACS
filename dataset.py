@@ -22,7 +22,7 @@ class PACS_Dataset():
     self.classes = image_dataset.classes 
     self.items = image_dataset.imgs
     self.class_to_idx = image_dataset.class_to_idx
-
+    self.transform = transform
 
   def __len__(self):
     length = len(self.items)
