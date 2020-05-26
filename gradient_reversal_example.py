@@ -95,5 +95,4 @@ def alexNetDA(pretrained=True,  num_classes=7, **kwargs):
             net.domain_classifier[x[0]].bias.data = net.classifier[x[1]].bias.data
         net.classifier[6] = nn.Linear(4096, num_classes)
         net.domain_classifier[3] = nn.Linear(100, 2)
-            return net
-        
+    return net     
