@@ -5,6 +5,7 @@ from PIL import Image
 import os
 import os.path
 import sys
+from torchvision import transforms
 
 def pil_loader(path):
     # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
@@ -29,6 +30,7 @@ class PACS_Dataset():
     return length
 
   def __getitem__(self, index):
+    t = transforms.ToTensor()
 
     #By the index, access directly the img path
     image, label = self.items[index]    
@@ -37,4 +39,4 @@ class PACS_Dataset():
     if self.transform is not None:
         image = self.transform(image)
 
-    return image, label
+    return t(image), label
