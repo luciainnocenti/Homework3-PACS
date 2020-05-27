@@ -65,7 +65,7 @@ class RandomNetworkWithReverseGrad(nn.Module):
 
         #domain classifier
         self.domain_classifier = nn.Sequential(
-            nn.Linear(50 * 4 * 4, 100), 
+            nn.Linear(256 * 6 * 6, 100), 
             nn.BatchNorm1d(100),
             nn.ReLU(True),
             nn.Linear(100, 1000),
