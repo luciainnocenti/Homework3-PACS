@@ -39,4 +39,5 @@ class PACS_Dataset():
     if self.transform is not None:
         image = self.transform(image)
 
-    return t(image), label
+    #return t(image), label
+    return image, label
