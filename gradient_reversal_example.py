@@ -65,10 +65,10 @@ class RandomNetworkWithReverseGrad(nn.Module):
 
         #domain classifier
         self.domain_classifier = nn.Sequential(
-            nn.Linear(256 * 6 * 6, 100), 
+            nn.Linear(256 * 6 * 6, 4096), 
             nn.BatchNorm1d(100),
             nn.ReLU(True),
-            nn.Linear(100, 1000),
+            nn.Linear(4096, 1000),
             nn.LogSoftmax(dim=1),
         )
 
@@ -97,5 +97,5 @@ def alexNetDA(pretrained=True,  num_classes=7, **kwargs):
             net.domain_classifier[x[0]].weight.data = net.classifier[x[1]].weight.data
             net.domain_classifier[x[0]].bias.data = net.classifier[x[1]].bias.data
         net.classifier[6] = nn.Linear(4096, num_classes)
-        net.domain_classifier[3] = nn.Linear(100, 2)
+        net.domain_classifier[3] = nn.Linear(4096, 2)
     return net     
